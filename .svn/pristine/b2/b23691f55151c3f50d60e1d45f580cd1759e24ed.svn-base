@@ -1,0 +1,309 @@
+/**
+ * This class represents a Partner
+ *
+ * @author		David Curras
+ * @version		March 7, 2013
+ */
+var Partner = function(genericObj) {
+
+	/**
+	 * @var		Number
+	 */
+	var _id = 0;
+
+	/**
+	 * @var		Photo
+	 */
+	var _photo = new Photo();
+
+	/**
+	 * @var		String
+	 */
+	var _date = '';
+
+	/**
+	 * @var		String
+	 */
+	var _description = '';
+
+	/**
+	 * @var		String
+	 */
+	var _title = '';
+
+	/**
+	 * @var		Boolean
+	 */
+	var _premium = false;
+
+	/**
+	 * @var		Boolean
+	 */
+	var _active = false;
+
+	/**
+	 * Constructor
+	 */
+	var init = function() {
+		if(Validator.IsInstanceOf('Object', genericObj)){
+			$.each(genericObj, function(property, value){
+				switch (property.toUpperCase()) {
+					case 'ID':
+						_setId(value);
+						break;
+					case 'PHOTO':
+						_setPhoto(value);
+						break;
+					case 'DATE':
+						_setDate(value);
+						break;
+					case 'DESCRIPTION':
+						_setDescription(value);
+						break;
+					case 'TITLE':
+						_setTitle(value);
+						break;
+					case 'PREMIUM':
+						_setPremium(value);
+						break;
+					case 'ACTIVE':
+						_setActive(value);
+						break;
+				}
+			});
+		}
+	};
+
+	/**
+	 * @param		Number		id
+	 */
+	var _setId = function(id){
+		_id = Number(id);
+	};
+
+	/**
+	 * @param		Photo		photo
+	 */
+	var _setPhoto = function(photo){
+		if(Validator.IsInstanceOf('Object', photo)){
+			_photo = new Photo(photo);
+		} else {
+			console.error('Function expects an object as param. ( Partner.setPhoto )');
+		}
+	};
+
+	/**
+	 * @param		String		date
+	 */
+	var _setDate = function(date){
+		_date = String(date);
+	};
+
+	/**
+	 * @param		String		description
+	 */
+	var _setDescription = function(description){
+		_description = String(description);
+	};
+
+	/**
+	 * @param		String		title
+	 */
+	var _setTitle = function(title){
+		_title = String(title);
+	};
+
+	/**
+	 * @param		Boolean		premium
+	 */
+	var _setPremium = function(premium){
+		_premium = Boolean(premium);
+	};
+
+	/**
+	 * @param		Boolean		active
+	 */
+	var _setActive = function(active){
+		_active = Boolean(active);
+	};
+
+	/**
+	 * @return		Number
+	 */
+	var _getId = function(){
+		return _id;
+	};
+
+	/**
+	 * @return		Photo
+	 */
+	var _getPhoto = function(){
+		return _photo;
+	};
+
+	/**
+	 * @return		String
+	 */
+	var _getDate = function(){
+		return _date;
+	};
+
+	/**
+	 * @return		String
+	 */
+	var _getDescription = function(){
+		return _description;
+	};
+
+	/**
+	 * @return		String
+	 */
+	var _getTitle = function(){
+		return _title;
+	};
+
+	/**
+	 * @return		Boolean
+	 */
+	var _getPremium = function(){
+		return _premium;
+	};
+
+	/**
+	 * @return		Boolean
+	 */
+	var _getActive = function(){
+		return _active;
+	};
+
+	/**
+	 * @return		JSON
+	 */
+	var _convertToArray = function(){
+		return {
+				"id":_id,
+				"photo":_photo,
+				"date":_date,
+				"description":_description,
+				"title":_title,
+				"premium":_premium,
+				"active":_active
+			};
+	};
+
+	/**
+	 * Executes constructor
+	 */
+	init();
+
+	/**
+	 * Returns public functions
+	 */
+	return{
+
+		/**
+		 * @param		Number		id
+		 */
+		setId : function(id){
+			_setId(id);
+		},
+
+		/**
+		 * @param		Photo		photo
+		 */
+		setPhoto : function(photo){
+			_setPhoto(photo);
+		},
+
+		/**
+		 * @param		String		date
+		 */
+		setDate : function(date){
+			_setDate(date);
+		},
+
+		/**
+		 * @param		String		description
+		 */
+		setDescription : function(description){
+			_setDescription(description);
+		},
+
+		/**
+		 * @param		String		title
+		 */
+		setTitle : function(title){
+			_setTitle(title);
+		},
+
+		/**
+		 * @param		Boolean		premium
+		 */
+		setPremium : function(premium){
+			_setPremium(premium);
+		},
+
+		/**
+		 * @param		Boolean		active
+		 */
+		setActive : function(active){
+			_setActive(active);
+		},
+
+		/**
+		 * @return		Number
+		 */
+		getId : function(){
+			return _getId();
+		},
+
+		/**
+		 * @return		Photo
+		 */
+		getPhoto : function(){
+			return _getPhoto();
+		},
+
+		/**
+		 * @return		String
+		 */
+		getDate : function(){
+			return _getDate();
+		},
+
+		/**
+		 * @return		String
+		 */
+		getDescription : function(){
+			return _getDescription();
+		},
+
+		/**
+		 * @return		String
+		 */
+		getTitle : function(){
+			return _getTitle();
+		},
+
+		/**
+		 * @return		Boolean
+		 */
+		getPremium : function(){
+			return _getPremium();
+		},
+
+		/**
+		 * @return		Boolean
+		 */
+		getActive : function(){
+			return _getActive();
+		},
+
+		/**
+		 * @return		JSON
+		 */
+		convertToArray : function(){
+			return _convertToArray();
+		}
+	};
+};

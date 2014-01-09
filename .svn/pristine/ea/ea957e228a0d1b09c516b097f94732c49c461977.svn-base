@@ -1,0 +1,87 @@
+<?php
+require '../siteConfig.php';
+require '../Utils/Bootstrap.php';
+
+Bootstrap::setRequiredFiles();
+if (Security::authenticate()){
+	header('Location: admin.html');
+}
+
+$failed=false;
+if($_POST && isset($_POST['user'])){
+	$user = UserModel::FindById(trim($_POST['user']));
+	if (is_object($user)){
+		if (md5($_POST['password']) == $user->getPassword()){
+			Security::authenticate($user);
+			header('Location: /admin.html');
+		}
+	}
+	$failed=true;
+}
+$loginForm = LoginView::RenderForm($failed);
+
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> 
+<!--<![endif]-->
+	<head>
+		<meta charset="iso-8859-1" />
+		<title>Login &middot; AgroUruguay</title>
+		<meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1" />
+		<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Shadows+Into+Light+Two' />
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.9.2.custom.css" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<!-- <link rel="stylesheet" media="screen and (max-width: 768px)" href="css/other-style.css" /> -->
+		<script type="text/javascript" src="js/libs/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="js/libs/jquery-ui-1.9.2.custom.min.js"></script>
+		<script type="text/javascript" src="js/libs/jquery.carouFredSel-6.1.0.js"></script>
+		<script type="text/javascript" src="js/libs/jquery.color.js"></script>
+		<script type="text/javascript" src="js/libs/jquery.Jcrop.js"></script>
+		<script type="text/javascript" src="js/script.js"></script>
+		<link rel="icon" type="image/png" href="img/favicon.png"/>
+	</head>
+	<body>
+		<div id="header">
+			<div id="tool-bar">
+				<img id="searchIcon" src="img/search.png" alt="Buscar" />
+				<input type="text" name="search" id="search" value="" class="ui-widget ui-widget-content ui-corner-all" />
+			</div>
+			<ul id="nav-bar">
+				<li><a href="index.html" title="Home">Inicio</a></li>
+				<li><a href="maquinarias.html" title="Maquinarias">Maquinarias</a></li>
+				<li><a href="inmuebles.html" title="Inmuebles">Inmuebles</a></li>
+				<li><a href="asociados.html" title="Asociados">Asociados</a></li>
+				<li><a href="#" class="active" title="Contacto">Contacto</a></li>
+			</ul>
+			<div class="clearfix"></div>
+			<div id="promo-images">
+				<a class="prev" id="promo-prev" href="#"><span>prev</span></a>
+				<a class="next" id="promo-next" href="#"><span>next</span></a>
+				<div id="caroufredsel">
+					<img src="../img/photos/bs-as.jpg" alt="Buenos Aires" />
+					<img src="../img/photos/piriapolis.jpg" alt="Uruguay" />
+					<img src="../img/photos/rosario.jpg" alt="Rosario" />
+					<img src="../img/photos/bs-as.jpg" alt="Buenos Aires" />
+					<img src="../img/photos/piriapolis.jpg" alt="Uruguay" />
+					<img src="../img/photos/rosario.jpg" alt="Rosario" />
+				</div>
+			</div>
+			<div id="logo"><img src="../img/logo.png" alt="Agrouruguay 2010" /></div>
+			<div class="clearfix"></div>
+		</div>
+		<div id="content">
+			<div id="login">
+				<form action="login.html" method="post">
+					<?php echo $loginForm; ?>
+				</form>
+			</div>
+		</div>
+		<div id="footer">
+		</div>
+	</body>
+</html>

@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<!DOCTYPE inserts SYSTEM "inserts.dtd">
+
+<inserts>
+	<entries table="estates">
+		<entry>
+			<field name="id">1</field>
+			<field name="typeId">2</field>
+			<field name="photoId">1</field>
+			<field name="date">2013-02-21 16:49:15</field>
+			<field name="description">A 800 mts. ruta 205 c/mejoras, casa, galpon, molino, alambrado perimetral, antes ganado ahora SOJA!!OPORTUNIDAD..u$s12.000ha.</field>
+			<field name="title">Campo Sojero 84 has. - Canuelas</field>
+			<field name="active">1</field>
+		</entry>
+		<entry>
+			<field name="id">2</field>
+			<field name="typeId">1</field>
+			<field name="photoId">2</field>
+			<field name="date">2013-02-21 16:49:15</field>
+			<field name="description">3 Pisos, 12 Habitaciones por piso, todos en suite Spa, Sauna, Restaurant, Salon de eventos con retroproyector y pantalla. u$s300.000 y ctas.</field>
+			<field name="title">Hotel Spa - Canuelas</field>
+			<field name="active">1</field>
+		</entry>
+	</entries>
+	<entries table="machineries">
+		<entry>
+			<field name="id">1</field>
+			<field name="photoId">3</field>
+			<field name="date">2013-02-21 16:49:15</field>
+			<field name="description">Muy buen estado!!! Toma de fuerza  polea y traba en diferencial.u$s6.000.- </field>
+			<field name="title">HANOMAG 35 HP FULL-FULL ORIG -mod.1955</field>
+			<field name="active">1</field>
+		</entry>
+		<entry>
+			<field name="id">2</field>
+			<field name="photoId">4</field>
+			<field name="date">2013-02-21 16:49:15</field>
+			<field name="description">En Muy buen estado, posee toma de fuerza, levante de tres puntos,y salida de control remoto. u$s14.500</field>
+			<field name="title">Tractor Massey Ferguson 1175 Mod.80</field>
+			<field name="active">1</field>
+		</entry>
+	</entries>
+	<entries table="partners">
+		<entry>
+			<field name="id">1</field>
+			<field name="photoId">5</field>
+			<field name="date">2013-02-21 16:49:15</field>
+			<field name="description">mscpropiedades@hotmail.com</field>
+			<field name="title">MSC Propiedades</field>
+			<field name="premium">1</field>
+			<field name="active">1</field>
+		</entry>
+		<entry>
+			<field name="id">2</field>
+			<field name="photoId">6</field>
+			<field name="date">2013-02-21 16:49:15</field>
+			<field name="description">(011) 1569164666 distribuidoraelvalentin@hotmail.com</field>
+			<field name="title">El Valentin</field>
+			<field name="premium">1</field>
+			<field name="active">1</field>
+		</entry>
+		<entry>
+			<field name="id">3</field>
+			<field name="photoId">7</field>
+			<field name="date">2013-02-21 16:49:15</field>
+			<field name="description"></field>
+			<field name="title">Altos de Piriapolis</field>
+			<field name="premium">1</field>
+			<field name="active">1</field>
+		</entry>
+		<entry>
+			<field name="id">4</field>
+			<field name="photoId">NULL</field>
+			<field name="date">2013-02-21 16:49:15</field>
+			<field name="description">(0341) 156362922</field>
+			<field name="title">Productos Agricolas</field>
+			<field name="premium">0</field>
+			<field name="active">1</field>
+		</entry>
+	</entries>
+	<entries table="photos">
+		<entry>
+			<field name="id">1</field>
+			<field name="alt">Campo 84 has</field>
+			<field name="thumbnail">img/photos/inmueble-0001-thumb.jpg</field>
+			<field name="url">img/photos/inmueble-0001.jpg</field>
+		</entry>
+		<entry>
+			<field name="id">2</field>
+			<field name="alt">Hotel Spa</field>
+			<field name="thumbnail">img/photos/inmueble-0002-thumb.jpg</field>
+			<field name="url">img/photos/inmueble-0002.jpg</field>
+		</entry>
+		<entry>
+			<field name="id">3</field>
+			<field name="alt">Tractor Ferguson 1175</field>
+			<field name="thumbnail">img/photos/maquinaria-0001-thumb.jpg</field>
+			<field name="url">img/photos/maquinaria-0001.jpg</field>
+		</entry>
+		<entry>
+			<field name="id">4</field>
+			<field name="alt">HANOMAG 35</field>
+			<field name="thumbnail">img/photos/maquinaria-0002-thumb.jpg</field>
+			<field name="url">img/photos/maquinaria-0002.jpg</field>
+		</entry>
+		<entry>
+			<field name="id">5</field>
+			<field name="alt">MSC Propiedades</field>
+			<field name="thumbnail">img/photos/asociado-0001-thumb.png</field>
+			<field name="url">img/photos/asociado-0001.png</field>
+		</entry>
+		<entry>
+			<field name="id">6</field>
+			<field name="alt">El Valentin</field>
+			<field name="thumbnail">img/photos/asociado-0002-thumb.jpg</field>
+			<field name="url">img/photos/asociado-0002.jpg</field>
+		</entry>
+		<entry>
+			<field name="id">7</field>
+			<field name="alt">Altos de Piriapolis</field>
+			<field name="thumbnail">img/photos/asociado-0003-thumb.png</field>
+			<field name="url">img/photos/asociado-0003.png</field>
+		</entry>
+	</entries>
+	<entries table="roles">
+		<entry>
+			<field name="id">1</field>
+			<field name="name">Admin</field>
+		</entry>
+		<entry>
+			<field name="id">2</field>
+			<field name="name">User</field>
+		</entry>
+	</entries>
+	<entries table="types">
+		<entry>
+			<field name="id">1</field>
+			<field name="name">Venta</field>
+		</entry>
+		<entry>
+			<field name="id">2</field>
+			<field name="name">Alquiler</field>
+		</entry>
+		<entry>
+			<field name="id">3</field>
+			<field name="name">Venta - Alquiler</field>
+		</entry>
+	</entries>
+	<entries table="users">
+		<entry>
+			<field name="id">david</field>
+			<field name="password">a83507a48bf2f2ae2a40f73d43620ef2</field> <!-- David2010 -->
+			<field name="name">David Curras</field>
+			<field name="lastActionDate">2012-05-30 00:00:00</field>
+			<field name="roleId">1</field>
+			<field name="active">1</field>
+		</entry>
+		<entry>
+			<field name="id">mauricio</field>
+			<field name="password">099f6f3b3ddd223d280aec96545e477c</field> <!-- Mauricio2010 -->
+			<field name="name">Mauricio Sosa Cabral</field>
+			<field name="lastActionDate">2012-05-30 00:00:00</field>
+			<field name="roleId">1</field>
+			<field name="active">1</field>
+		</entry>
+		<entry>
+			<field name="id">sergio</field>
+			<field name="password">481c9ca773899d42c673742b2638f164</field> <!-- Sergio2010 -->
+			<field name="name">Sergio Sosa Cabral</field>
+			<field name="lastActionDate">2012-05-30 00:00:00</field>
+			<field name="roleId">1</field>
+			<field name="active">1</field>
+		</entry>
+	</entries>
+</inserts>

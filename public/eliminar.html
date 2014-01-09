@@ -1,0 +1,47 @@
+<?php
+require '../siteConfig.php';
+require '../Utils/Bootstrap.php';
+
+Bootstrap::setRequiredFiles();
+
+if (!Security::Authenticate()){
+	header('Location: login.html?auth=0');
+}
+$fail = true;
+if($_GET && isset($_GET['tipo']) && isset($_GET['id']) && is_numeric($_GET['id']) && (intval($_GET['id']) > 0)){
+	switch(strtolower(trim($_GET['tipo']))){
+		case 'maquinaria':
+			$entity = MachineryModel::FindById(intval($_GET['id']));
+			if(!empty($entity)){
+				$entity->setActive(0);
+				MachineryModel::Save($entity);
+				//MachineryModel::Delete($entity->getId());
+				header('Location: admin.html#machineries');
+				$fail = false;
+			}
+			break;
+		case 'inmueble':
+			$entity = EstateModel::FindById(intval($_GET['id']));
+			if(!empty($entity)){
+				$entity->setActive(0);
+				EstateModel::Save($entity);
+				//EstateModel::Delete($entity->getId());
+				header('Location: admin.html#estates');
+				$fail = false;
+			}
+			break;
+		case 'asociado':
+			$entity = PartnerModel::FindById(intval($_GET['id']));
+			if(!empty($entity)){
+				$entity->setActive(0);
+				PartnerModel::Save($entity);
+				//PartnerModel::Delete($entity->getId());
+				header('Location: admin.html#partners');
+				$fail = false;
+			}
+			break;
+	}
+}
+if($fail){
+	header('Location: 404.html');
+}

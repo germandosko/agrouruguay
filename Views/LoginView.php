@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @author			German Dosko
+ * @version			March 6, 2013
+ * @filesource		/Views/LoginView.php
+ */
+class LoginView{
+	
+	/**
+	 * Returns an html string containing the proper login icons
+	 * 
+	 * @static	static
+	 * @return	string
+	 */
+	public static function RenderIcon(){
+		$html = '';
+		if (Security::authenticate()){
+			$html .= '<span>'.Session::getInstance()->userName.'</span>'."\n";
+			$html .= "\t\t\t\t".'<a href="admin.html" title="Sistema"><img src="img/process.png" alt="Administraci&oacute;n" /></a>'."\n";
+			$html .= "\t\t\t\t".'<a href="logout.html" title="Salir"><img src="img/logout.png" alt="Salir" /></a>'."\n";
+		} else {
+			$html .= '<a href="login.html" title="Ingresar"><img src="img/login.png" alt="Ingresar" /></a>';
+		}
+		return $html;
+	}
+	
+	/**
+	 * Returns an html string containing the
+	 * 
+	 * @static	static
+	 * @return	string
+	 */
+	public static function RenderForm($failed){
+		$success = '';
+		$html = '<fieldset>'."\n";
+		$html .= "\t\t\t\t\t\t".'<label for="user">Usuario</label>'."\n";
+		$html .= "\t\t\t\t\t\t".'<input type="text" value="" name="user" class="ui-widget ui-widget-content ui-corner-all" />'."\n";
+		$html .= "\t\t\t\t\t\t".'<label for="password">Contrase&ntilde;a</label>'."\n";
+		$html .= "\t\t\t\t\t\t".'<input type="password" value="" name="password" class="ui-widget ui-widget-content ui-corner-all" />'."\n";
+		$html .= "\t\t\t\t\t\t".'<input type="submit" value="Enviar" class="ui-widget ui-widget-content ui-corner-all" />'."\n";
+		$html .= "\t\t\t\t\t".'</fieldset>'."\n";
+		if(!empty($failed)){
+			$html .= "\t\t\t\t\t".'<p class="error"><img src="img/error.png" alt="Error" />Usuario o contrase&ntilde;a incorrecto</p>'."\n";
+		}
+		return $html;
+	}
+}

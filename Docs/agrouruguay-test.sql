@@ -1,0 +1,119 @@
+--
+-- Database: `v0090686_agrouruguaymuestra`
+--
+CREATE DATABASE `v0090686_agrouruguaymuestra` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `v0090686_agrouruguaymuestra`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estates`
+--
+
+CREATE TABLE IF NOT EXISTS `estates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `description` varchar(2047) NOT NULL,
+  `photoId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `photoId` (`photoId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `estates`
+--
+
+INSERT INTO `estates` (`id`, `title`, `description`, `photoId`) VALUES
+(1, 'Campo Sojero 84 has. - Cañuelas', 'A 800 mts. ruta 205 c/mejoras, casa, galpon, molino, alambrado perimetral, antes ganado ahora SOJA!!OPORTUNIDAD..u$s12.000ha', 5),
+(2, 'Hotel Spa - Cañuelas', '3 Pisos, 12 Habitaciones por piso, todos en suite Spa, Sauna, Restaurant, Salón de eventos con retroproyector y pantalla. u$s300.000 y ctas.', 6);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `machineries`
+--
+
+CREATE TABLE IF NOT EXISTS `machineries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `description` varchar(2047) NOT NULL,
+  `photoId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `photoId` (`photoId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `machineries`
+--
+
+INSERT INTO `machineries` (`id`, `title`, `description`, `photoId`) VALUES
+(1, 'Tractor Massey Ferguson 1175 Mod.80 ', 'En Muy buen estado, posee toma de fuerza, levante de tres puntos,y salida de control remoto. u$s14.500 ', 1),
+(2, 'HANOMAG 35 HP FULL-FULL ORIG -MOD.1955', 'Muy buen estado!!! Toma de fuerza polea y traba en diferencial.u$s6.000.', 2),
+(3, 'SI TIENE UNA MAQUINARIA EN VENTA!!!', 'CONSULTENOS NOSOTROS SE LA COMERCIALIZAMOS!!', 3),
+(4, 'Mercedez Benz 911 Mod. 71 Mot. 1114', 'MOTOR MERCEDES 1114, FURGON CERRADO,3 ASIENTOS , LARGO DE CARGA INTERNO 7,50 MTS PORTON TRASERO LIBRO 2.40 X2 MTS DE ALTO 2 PTAS LAT, APERT A AIRE, CAP DE CARGA 8OOO KGMS PALOMAS REFORZADAS PARA CARGA MOTOR MUY BUENO CUB DELANT BUENAS, PINTADO HACE POCO TOTAL$ 26,000 SE ACEPTAN PERMUTAS', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `photos`
+--
+
+CREATE TABLE IF NOT EXISTS `photos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) NOT NULL,
+  `alt` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `photos`
+--
+
+INSERT INTO `photos` (`id`, `url`, `alt`) VALUES
+(1, 'http://www.agrouruguay2010.com/imagenes/fotomaq/FotoMaquinaria6.jpg', 'Tractor Fergunson 1114'),
+(2, 'http://www.agrouruguay2010.com/imagenes/fotomaq/FotoMaquinaria7.jpg', 'Hanomag 35'),
+(3, 'http://www.agrouruguay2010.com/imagenes/fotomaq/FotoMaquinaria8.jpg', 'Tractor Muestra'),
+(4, 'http://www.agrouruguay2010.com/imagenes/fotomaq/FotoMaquinaria8.jpg', 'MB 911'),
+(5, 'http://www.agrouruguay2010.com/imagenes/fotoinm/FotoInmueble1.JPG', 'Campo 84 Hectareas'),
+(6, 'http://www.agrouruguay2010.com/imagenes/fotoinm/FotoInmueble2.jpg', 'Hotel Spa'),
+(7, 'xx', 'xx');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` varchar(32) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `password` char(32) NOT NULL,
+  `mail` varchar(256) NOT NULL,
+  `newsletter` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `password`, `mail`, `newsletter`) VALUES
+('8', '8', 'c9f0f895fb98ab9159f51fd0297e236d', 'ncabello@e-style.com.ar', 1),
+('admin', 'Administrador', '21232f297a57a5a743894a0e4a801fc3', 'admin', 1),
+('david', 'German Dosko', '172522ec1028ab781d9dfd17eaca4427', 'david', 1);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `estates`
+--
+ALTER TABLE `estates`
+  ADD CONSTRAINT `estates_ibfk_1` FOREIGN KEY (`photoId`) REFERENCES `photos` (`id`);
+
+--
+-- Constraints for table `machineries`
+--
+ALTER TABLE `machineries`
+  ADD CONSTRAINT `machineries_ibfk_1` FOREIGN KEY (`photoId`) REFERENCES `photos` (`id`);

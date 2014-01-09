@@ -1,0 +1,150 @@
+<?php
+/**
+ * @author		German Dosko
+ * @version		March 7, 2013
+ */
+
+class Estate extends AbstractEntity {
+
+	/**
+	 * @var		int
+	 */
+	protected $id = null;
+
+	/**
+	 * @var		Type
+	 */
+	protected $type = null;
+
+	/**
+	 * @var		Photo
+	 */
+	protected $photo = null;
+
+	/**
+	 * @var		date
+	 */
+	protected $date = null;
+
+	/**
+	 * @var		text
+	 */
+	protected $description = null;
+
+	/**
+	 * @var		string
+	 */
+	protected $title = null;
+
+	/**
+	 * @var		bool
+	 */
+	protected $active = null;
+
+	/**
+	 * @param		int		$id
+	 */
+	public function setId($id){
+		$this->id = intval($id);
+	}
+
+	/**
+	 * @param		Type		$type
+	 */
+	public function setType($type){
+		if(is_object($type)){
+			$this->type = $type;
+		} else {
+			throw new Exception('Function expects an object as param. (Estate->setType($type))');
+		}
+	}
+
+	/**
+	 * @param		Photo		$photo
+	 */
+	public function setPhoto($photo){
+		if(is_object($photo)){
+			$this->photo = $photo;
+		} else {
+			throw new Exception('Function expects an object as param. (Estate->setPhoto($photo))');
+		}
+	}
+
+	/**
+	 * @param		date		$date
+	 */
+	public function setDate($date){
+		$this->date = substr(strval($date), 0, 32);
+	}
+
+	/**
+	 * @param		text		$description
+	 */
+	public function setDescription($description){
+		$this->description = substr(strval($description), 0, 4096);
+	}
+
+	/**
+	 * @param		string		$title
+	 */
+	public function setTitle($title){
+		$this->title = substr(strval($title), 0, 256);
+	}
+
+	/**
+	 * @param		bool		$active
+	 */
+	public function setActive($active){
+		$this->active = $active;
+	}
+
+	/**
+	 * @return		int
+	 */
+	public function getId(){
+		return $this->id;
+	}
+
+	/**
+	 * @return		Type
+	 */
+	public function getType(){
+		return $this->type;
+	}
+
+	/**
+	 * @return		Photo
+	 */
+	public function getPhoto(){
+		return $this->photo;
+	}
+
+	/**
+	 * @return		date
+	 */
+	public function getDate(){
+		return $this->date;
+	}
+
+	/**
+	 * @return		text
+	 */
+	public function getDescription(){
+		return $this->description;
+	}
+
+	/**
+	 * @return		string
+	 */
+	public function getTitle(){
+		return $this->title;
+	}
+
+	/**
+	 * @return		bool
+	 */
+	public function getActive(){
+		return $this->active;
+	}
+
+}

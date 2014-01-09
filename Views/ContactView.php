@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @author			German Dosko
+ * @version			March 6, 2013
+ * @filesource		/Views/PartnersView.php
+ */
+class ContactView{
+	
+	/**
+	 * Returns an html string containing the contact form
+	 * 
+	 * @static	static
+	 * @return	string
+	 */
+	public static function RenderForm($mail){
+		$content = array('name'=>'', 'from'=>'', 'content'=>'');
+		$errors = array('name'=>'', 'from'=>'', 'content'=>'');
+		$success = '';
+		if(!empty($mail)){
+			if(is_array($mail->errors) && count($mail->errors) > 0){
+				$content = array(
+					'name'=>$mail->getName(),
+					'from'=>$mail->getFrom(),
+					'content'=>$mail->getContent()
+				);
+				if(isset($mail->errors['name'])){
+					$errors['name'] .= "\t\t\t\t\t\t\t".'<p class="error"><img src="img/error.png" alt="Error" />'.$mail->errors['name'].'</p>'."\n";;
+				}
+				if(isset($mail->errors['from'])){
+					$errors['from'] .= "\t\t\t\t\t\t\t".'<p class="error"><img src="img/error.png" alt="Error" />'.$mail->errors['from'].'</p>'."\n";;
+				}
+				if(isset($mail->errors['content'])){
+					$errors['content'] .= "\t\t\t\t\t\t\t".'<p class="error"><img src="img/error.png" alt="Error" />'.$mail->errors['content'].'</p>'."\n";
+				}
+			} else {
+				$success = "\t\t\t\t\t\t\t".'<p class="success"><img src="img/accept.png" alt="Exito" />Mensaje enviado correctamente</p>'."\n";
+			}
+		}
+		$html = '<fieldset>'."\n";
+		$html .= "\t\t\t\t\t\t\t".'<label for="name">Nombre</label>'."\n";
+		$html .= "\t\t\t\t\t\t\t".'<input type="text" value="'.trim($content['name']).'" name="name" class="ui-widget ui-widget-content ui-corner-all" />'."\n";
+		$html .= $errors['name'];
+		$html .= "\t\t\t\t\t\t\t".'<label for="from">e-mail</label>'."\n";
+		$html .= "\t\t\t\t\t\t\t".'<input type="text" value="'.trim($content['from']).'" name="from" class="ui-widget ui-widget-content ui-corner-all" />'."\n";
+		$html .= $errors['from'];
+		$html .= "\t\t\t\t\t\t\t".'<label for="content">Consulta</label>'."\n";
+		$html .= "\t\t\t\t\t\t\t".'<textarea name="content" class="ui-widget ui-widget-content ui-corner-all">'.trim($content['content']).'</textarea>'."\n";
+		$html .= $errors['content'];
+		$html .= "\t\t\t\t\t\t\t".'<input type="submit" value="Enviar" class="ui-widget ui-widget-content ui-corner-all" />'."\n";
+		$html .= $success;
+		$html .= "\t\t\t\t\t\t".'</fieldset>'."\n";
+		return $html;
+	}
+}

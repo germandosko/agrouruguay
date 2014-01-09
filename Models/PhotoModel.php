@@ -1,0 +1,311 @@
+<?php
+/**
+ * @author		German Dosko
+ * @version		March 22, 2013
+ * @filesource		/Models/PhotoModel.php
+ */
+
+class PhotoModel extends AbstractModel {
+
+	/**
+	 * Saves the Photo in the Data Base
+	 * 
+	 * @param		Photo		$photo
+	 * @static
+	 */
+	public static function Save(&$photo){
+		$id = $photo->getId();
+		$properties = array(
+				"alt" => self::$IsUsingUtf8 ? htmlentities(utf8_decode($photo->getAlt()), ENT_COMPAT, self::$Charset, false) : htmlentities($photo->getAlt(), ENT_COMPAT, self::$Charset, false),
+				"thumbnail" => self::$IsUsingUtf8 ? htmlentities(utf8_decode($photo->getThumbnail()), ENT_COMPAT, self::$Charset, false) : htmlentities($photo->getThumbnail(), ENT_COMPAT, self::$Charset, false),
+				"url" => self::$IsUsingUtf8 ? htmlentities(utf8_decode($photo->getUrl()), ENT_COMPAT, self::$Charset, false) : htmlentities($photo->getUrl(), ENT_COMPAT, self::$Charset, false)
+			);
+		$emptyValues = '';
+		if(empty($properties["thumbnail"])){
+			$emptyValues .= ' thumbnail';
+		}
+		if(empty($properties["url"])){
+			$emptyValues .= ' url';
+		}
+		if(empty($emptyValues)){
+			$query = new Query();
+			if(!empty($id) && is_int($id)){
+				$query->createUpdate('photos', $properties, 'id = "'.$id.'"', true);
+				$isExecuted = $query->execute();
+				if(!$isExecuted){
+					throw new Exception('Unable to update Photo "'.$id.'" in database. (PhotoModel::save())');
+				}
+			} else {
+				$query->createInsert('photos', $properties, true);
+				$isExecuted = $query->execute();
+				if($isExecuted){
+					//get the last inserted id
+					$query->createSelect(array('MAX(id) as id'), 'photos');
+					$value = $query->execute();
+					$photo->setId($value['id']);
+				} else {
+					throw new Exception('Unable to insert Photo in database. (PhotoModel::save())');
+				}
+			}
+		} else {
+			throw new Exception('Unable to save Photo with empty required values:'.$emptyValues.'. (PhotoModel::save())');
+		}
+		return true;
+	}
+
+	/**
+	 * Finds a Photo by id
+	 * 
+	 * @param		int		$id
+	 * @return		Photo
+	 * @static
+	 */
+	public static function FindById($id){
+		$query = new Query();
+		$query->createSelect(array('*'), 'photos', array(), 'id = "'.$id.'"');
+		$photoArray = $query->execute();
+		$photo = false;
+		if(!empty($photoArray)){
+			$photo = self::CreateObjectFromArray($photoArray);
+		}
+		return $photo;
+	}
+
+	/**
+	 * Finds stored Photos by specific values
+	 * 
+	 * @param		array|string		$params
+	 * @param		bool				$expectsOne
+	 * @return		array|Photo
+	 * @static
+	 */
+	public static function FindBy($params, $expectsOne=false){
+		$photosArray = array();
+		if(is_array($params)){
+			$params = self::CheckParams($params);
+			//TODO: Use Query::Make() !!!
+			$whereArray = array();
+			foreach ($params['where'] as $key => $value){
+				if(!empty($value)){
+					$parsedValue = self::$IsUsingUtf8 ? htmlentities(utf8_decode($value), ENT_COMPAT, self::$Charset, false) : htmlentities($value, ENT_COMPAT, self::$Charset, false);
+					array_push($whereArray, $key.' = "'.$parsedValue.'"');
+				}
+			}
+			$where = implode(' AND ', $whereArray);
+			$orderBy = array();
+			if(!empty($params['orderBy'])){
+				$orderBy = implode(',', $params['orderBy']);
+			}
+			$limit = '';
+			if(!empty($params['from'])){
+				$limit = ''.$params['from'];
+				if(!empty($params['amount'])){
+					$limit .= ', '.$params['amount'];
+				} else {
+					$limit .= ', 10';
+				}
+			}
+			$query = new Query();
+			$query->createSelect(array('*'), 'photos', null, $where, $orderBy, $limit);
+			$arrayArraysPhoto = $query->execute(true);
+			if(!empty($arrayArraysPhoto)){
+				if($expectsOne){
+					return self::CreateObjectFromArray($arrayArraysPhoto[0]);
+				}
+				foreach($arrayArraysPhoto as $arrayPhoto){
+					array_push($photosArray, self::CreateObjectFromArray($arrayPhoto));
+				}
+			} elseif($expectsOne){
+				return false;
+			}
+		} else {
+			throw new Exception('Invalid param, array expected in PhotoModel::FindBy()');
+		}
+		return $photosArray;
+	}
+
+	/**
+	 * Finds stored Photos by multiple values of an specific field
+	 * 
+	 * @param		array|string		$params
+	 * @return		array|Photo
+	 * @static
+	 */
+	public static function FindByMultipleValues($params, $expectsOne=false){
+		$photosArray = array();
+		if(is_array($params)){
+			$params = self::CheckParams($params);
+			//TODO: Use Query::Make() !!!
+			$whereArray = array();
+			foreach ($params['where'] as $key => $value){
+				if(!empty($value) && is_array($value)){
+					array_push($whereArray, $key.' IN ('.implode(', ', $value).')');
+				} else {
+					throw new Exception('Invalid param, array expected in PhotoModel::FindByMultipleValues()');
+				}
+			}
+			$where = implode(' OR ', $whereArray);
+			$orderBy = array();
+			if(!empty($params['orderBy'])){
+				$orderBy = implode(',', $params['orderBy']);
+			}
+			$limit = '';
+			if(!empty($params['from'])){
+				$limit = ''.$params['from'];
+				if(!empty($params['amount'])){
+					$limit .= ', '.$params['amount'];
+				} else {
+					$limit .= ', 10';
+				}
+			}
+			$query = new Query();
+			$query->createSelect(array('*'), 'photos', null, $where, $orderBy, $limit);
+			$arrayArraysPhoto = $query->execute(true);
+			if(!empty($arrayArraysPhoto)){
+				foreach($arrayArraysPhoto as $arrayPhoto){
+					array_push($photosArray, self::CreateObjectFromArray($arrayPhoto));
+				}
+			}
+		} else {
+			throw new Exception('Invalid param, array expected in PhotoModel::FindByMultipleValues()');
+		}
+		return $photosArray;
+	}
+
+	/**
+	 * Retrieves all Photos stored in the data base
+	 * 
+	 * @return		array|Photo
+	 * @static
+	 */
+	public static function FetchAll($params=array('orderBy', 'from', 'amount')){
+		$photosArray = array();
+		$params = self::CheckParams($params, self::FetchAll);
+		$orderBy = array();
+		if(!empty($params['orderBy'])){
+			$orderBy = implode(',', $params['orderBy']);
+		}
+		$limit = '';
+		if(!empty($params['from'])){
+			$limit = ''.$params['from'];
+			if(!empty($params['amount'])){
+				$limit .= ', '.$params['amount'];
+			} else {
+				$limit .= ', 10';
+			}
+		}
+		$query = new Query();
+		$query->createSelect(array('*'), 'photos', null, null, $orderBy, $limit);
+		$arrayArraysPhoto = $query->execute(true);
+		if(!empty($arrayArraysPhoto)){
+			foreach($arrayArraysPhoto as $arrayPhoto){
+				array_push($photosArray, self::CreateObjectFromArray($arrayPhoto));
+			}
+		}
+		return $photosArray;
+	}
+
+	/**
+	 * Retrieves all Photos that matches the search text
+	 * 
+	 * @param		array|string		$params
+	 * @param		bool				$expectsOne
+	 * @return		array|Photo
+	 * @static
+	 */
+	public static function Search($params, $expectsOne=false){
+		$photosArray = array();
+		if(is_array($params)){
+			$params = self::CheckParams($params);
+			if(is_array($params['where']) && isset($params['where']['text']) && isset($params['where']['fields'])){
+				$text = trim($params['where']['text']);
+				$searchs = array();
+				foreach($params['where']['fields'] as $field){
+					array_push($searchs, trim($field).' LIKE "%'.$text.'%"');
+				}
+				$where = implode(' OR ', $searchs);
+				$orderBy = array();
+				if(!empty($params['orderBy'])){
+					$orderBy = implode(',', $params['orderBy']);
+				}
+				$limit = '';
+				if(!empty($params['from'])){
+					$limit = ''.$params['from'];
+					if(!empty($params['amount'])){
+						$limit .= ', '.$params['amount'];
+					} else {
+						$limit .= ', 10';
+					}
+				}
+				$query = new Query();
+				$query->createSelect(array('*'), 'photos', null, $where, $orderBy, $limit);
+				$arrayArraysPhoto = $query->execute(true);
+				if(!empty($arrayArraysPhoto)){
+					if($expectsOne){
+						return self::CreateObjectFromArray($arrayArraysPhoto[0]);
+					}
+					foreach($arrayArraysPhoto as $arrayPhoto){
+						array_push($photosArray, self::CreateObjectFromArray($arrayPhoto));
+					}
+				} elseif($expectsOne){
+					return false;
+				}
+			} else {
+				throw new Exception('Unable to perform search with invalid params. PhotoModel::Search()');
+			}
+		} else {
+			throw new Exception('Unable to perform search with invalid params. PhotoModel::Search()');
+		}
+		return $photosArray;
+	}
+
+	/**
+	 * Retrieves the number of Photos stored in the data base
+	 * 
+	 * @return		int
+	 * @static
+	 */
+	public static function GetCount(){
+		$query = new Query();
+		$query->push('SELECT count(*) as count FROM photos');
+		$result = $query->execute();
+		return $result['count'];
+	}
+
+	/**
+	 *  Deletes Photo by id
+	 * 
+	 * @param		int		$id
+	 * @static
+	 */
+	public static function Delete($id){
+		$query = new Query();
+		$query->createDelete('photos', $id);
+		return $query->execute();
+	}
+
+	/**
+	 *  Creates Photo object from the basic properties
+	 * 
+	 * @param		array|string		$properties
+	 * @return		Photo
+	 * @static
+	 */
+	public static function CreateObjectFromArray($properties){
+		$emptyValues = '';
+		if(empty($properties["id"])){
+			$emptyValues .= ' id';
+		}
+		if(empty($properties["thumbnail"])){
+			$emptyValues .= ' thumbnail';
+		}
+		if(empty($properties["url"])){
+			$emptyValues .= ' url';
+		}
+		if(empty($emptyValues)){
+			return new Photo($properties);
+		} else {
+			throw new Exception('Unable to create Photo with empty required values:'.$emptyValues.' for Photo "'.$properties['id'].'". (PhotoModel::CreateObjectFromArray())');
+		}
+	}
+}

@@ -1,0 +1,111 @@
+<?php
+require '../siteConfig.php';
+require '../Utils/Bootstrap.php';
+
+Bootstrap::setRequiredFiles();
+$mail = null;
+if($_POST && isset($_POST['from'])){
+	$mail = new Mail();
+	$mail->send();
+}
+$contactForm = ContactView::RenderForm($mail);
+$loginIcon = LoginView::RenderIcon();
+
+?>
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> 
+<!--<![endif]-->
+	<head>
+		<meta charset="iso-8859-1" />
+		<title>Contacto &middot; AgroUruguay</title>
+		<meta name="viewport" content="width=device-width, user-scalable=no, maximum-scale=1" />
+		<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Shadows+Into+Light+Two' />
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.9.2.custom.css" />
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<!-- <link rel="stylesheet" media="screen and (max-width: 768px)" href="css/other-style.css" /> -->
+		<script type="text/javascript" src="js/libs/jquery-1.8.3.js"></script>
+		<script type="text/javascript" src="js/libs/jquery-ui-1.9.2.custom.min.js"></script>
+		<script type="text/javascript" src="js/libs/jquery.carouFredSel-6.1.0.js"></script>
+		<script type="text/javascript" src="js/libs/jquery.color.js"></script>
+		<script type="text/javascript" src="js/libs/jquery.Jcrop.js"></script>
+		<script type="text/javascript" src="js/script.js"></script>
+		<link rel="icon" type="image/png" href="img/favicon.png"/>
+	</head>
+	<body>
+		<div id="header">
+			<div id="tool-bar">
+				<?php echo $loginIcon; ?>
+				<img id="searchIcon" src="img/search.png" alt="Buscar" />
+				<input type="text" name="search" id="search" value="" class="ui-widget ui-widget-content ui-corner-all" />
+			</div>
+			<ul id="nav-bar">
+				<li><a href="index.html" title="Home">Inicio</a></li>
+				<li><a href="maquinarias.html" title="Maquinarias">Maquinarias</a></li>
+				<li><a href="inmuebles.html" title="Inmuebles">Inmuebles</a></li>
+				<li><a href="asociados.html" title="Asociados">Asociados</a></li>
+				<li><a href="#" class="active" title="Contacto">Contacto</a></li>
+			</ul>
+			<div class="clearfix"></div>
+			<div id="promo-images">
+				<a class="prev" id="promo-prev" href="#"><span>prev</span></a>
+				<a class="next" id="promo-next" href="#"><span>next</span></a>
+				<div id="caroufredsel">
+					<img src="img/photos/bs-as.jpg" alt="Buenos Aires" />
+					<img src="img/photos/piriapolis.jpg" alt="Uruguay" />
+					<img src="img/photos/rosario.jpg" alt="Rosario" />
+					<img src="img/photos/bs-as.jpg" alt="Buenos Aires" />
+					<img src="img/photos/piriapolis.jpg" alt="Uruguay" />
+					<img src="img/photos/rosario.jpg" alt="Rosario" />
+				</div>
+			</div>
+			<div id="logo"><img src="img/logo.png" alt="Agrouruguay 2010" /></div>
+			<div class="clearfix"></div>
+		</div>
+		<div id="content">
+			<div id="main">
+				<div class="left">
+					<div class="contact">
+						<h2>En Rosario</h2>
+						<p> 
+							<span class="info">Corrientes 715 Oficina I8</span>
+							<span class="info">Rosario &middot; Santa Fe (2000)</span>
+							<span class="info">(0054) 0341 - 156 362 922</span>
+							<span class="info bold">Sergio Sosa Cabral</span>
+						</p>
+					</div>
+					<div class="contact">
+						<h2>En Bs As</h2>
+						<p> 
+							<span class="info">Juan A Boeri 1177</span>
+							<span class="info">Ciudad Aut. de Buenos Aires</span>
+							<span class="info">(0054) 011 - 156 916 4666</span>
+							<span class="info bold">Mauricio Sosa Cabral</span>
+						</p>
+					</div>
+					<div class="contact">
+						<h2>En Uruguay</h2>
+						<p> 
+							<span class="info">Camino de los Arrayanes</span>
+							<span class="info">Piriapolis - Uruguay</span>
+							<span class="info">(00598) 94 - 355866</span>
+							<span class="info bold">Rodolfo Sosa</span>
+						</p>
+					</div>
+				</div>
+				<div class="right">
+					<form action="contacto.html" method="post">
+						<?php echo $contactForm; ?>
+					</form>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<div id="footer">
+		</div>
+	</body>
+</html>

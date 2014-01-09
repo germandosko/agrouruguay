@@ -1,0 +1,148 @@
+-- phpMyAdmin SQL Dump
+-- version 3.5.1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Oct 16, 2012 at 01:22 PM
+-- Server version: 5.1.61-community
+-- PHP Version: 5.2.17
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `a6r0_agrouruguay`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `estates`
+--
+
+CREATE TABLE IF NOT EXISTS `estates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `photoId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `photoId` (`photoId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `estates`
+--
+
+INSERT INTO `estates` (`id`, `title`, `description`, `photoId`) VALUES
+(1, 'Campo Sojero 84 has. - Ca&ntilde;uelas', 'A 800 mts. ruta 205 c/mejoras, casa, galpon, molino, alambrado perimetral, antes ganado ahora SOJA!!OPORTUNIDAD..u$s12.000ha.', 1),
+(2, 'Hotel Spa - Ca&ntilde;uelas', '3 Pisos, 12 Habitaciones por piso, todos en suite Spa, Sauna, Restaurant, Sal&oacute;n de eventos con retroproyector y pantalla. u$s300.000 y ctas.', 2),
+(3, 'Lotes Country Principado de San Vicente', 'Desde 700 m2, ciudad n&aacute;utica en 200 has, 1 House principal en 3 plantas de 900 m2 estilo n&oacute;rdico, 1 house h&iacute;pico, 1 house golf, canales navegables, centro de servicios.u$s45.000', 3),
+(4, 'Campo agricola 45has. San Javier-Rio Negro', 'Ubicado a 3.5km el centro de San Javier, monte alamos criollos y sauces llorones, ca&ntilde;ada, quinta con arboles frutales, camino vecinal de tosca.u$s230.000', 4),
+(5, 'Campo 45 has. San Javier-Rio Negro', 'A 4 km. del centro de San Javier, construccion a reciclar, quintas c/eucaliptus colorados, algarrobos, espinillos, arboles frutales, ca&ntilde;ada..u$s230.000.-', 5),
+(6, 'Chacra 38has. Soriano-Mercedes', 'A 10km. de Mercedes, casa 3 habitaciones, galpon 10x6, pozo c/bomba, chiqueros y gallineros, tubo y manga, tajamar, alambrado a nuevo...u$s430.000.-', 6),
+(7, 'BUSCAMOS CAMPOS POR PEDIDOS CONCRETOS!!!', 'PARA COMPRAR O ARRENDAR, EN URUGUAY Y EN ARGENTINA URGENTE!!! PEDIDOS CONCRETOS!!!', 7);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `machineries`
+--
+
+CREATE TABLE IF NOT EXISTS `machineries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `photoId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `photoId` (`photoId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `machineries`
+--
+
+INSERT INTO `machineries` (`id`, `title`, `description`, `photoId`) VALUES
+(1, 'Tractor Massey Ferguson 1175 Mod.80', 'En Muy buen estado, posee toma de fuerza, levante de tres puntos,y salida de control remoto. u$s14.500', 8),
+(2, 'HANOMAG 35 HP FULL-FULL ORIG -mod.1955', 'Muy buen estado!!! Toma de fuerza  polea y traba en diferencial.u$s6.000.- ', 9),
+(3, 'SI TIENE UNA MAQUINARIA EN VENTA!!!', 'CONSULTENOS NOSOTROS SE LA COMERCIALIZAMOS!!!!', 10),
+(4, 'Mercedez Benz 911 Mod. 71 Mot. 1114', 'MOTOR MERCEDES 1114, FURGON CERRADO,3 ASIENTOS , LARGO DE CARGA INTERNO 7,50 MTS\r\nPORTON TRASERO LIBRO  2.40 X2 MTS DE ALTO 2 PTAS LAT, APERT A  AIRE,\r\nCAP DE CARGA 8OOO KGMS  PALOMAS REFORZADAS PARA CARGA\r\n MOTOR MUY BUENO CUB DELANT BUENAS, PINTADO HACE POCO TOTAL$ 26,000 SE ACEPTAN PERMUTAS \r\n', 11);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `photos`
+--
+
+CREATE TABLE IF NOT EXISTS `photos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) NOT NULL,
+  `alt` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+
+--
+-- Dumping data for table `photos`
+--
+
+INSERT INTO `photos` (`id`, `url`, `alt`) VALUES
+(1, '/Views/images/photos/photo0001.jpg', 'Campo 84 has'),
+(2, '/Views/images/photos/photo0002.jpg', 'Hotel Spa'),
+(3, '/Views/images/photos/photo0003.jpg', 'Lotes Country'),
+(4, '/Views/images/photos/photo0004.jpg', 'Campo San Javier 45 has.'),
+(5, '/Views/images/photos/photo0005.jpg', 'Campo 45 has.'),
+(6, '/Views/images/photos/photo0006.jpg', 'Chacra Soriano 38has.'),
+(7, '/Views/images/photos/photo0007.jpg', 'Campo pedido'),
+(8, '/Views/images/photos/photo0000.jpg', 'Tractor Ferguson1175'),
+(9, '/Views/images/photos/photo0000.jpg', 'HANOMAG 35'),
+(10, '/Views/images/photos/photo0000.jpg', 'Tractor'),
+(11, '/Views/images/photos/photo0000.jpg', 'MB 911/71');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` varchar(32) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `password` char(32) NOT NULL,
+  `mail` varchar(256) NOT NULL,
+  `newsletter` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `password`, `mail`, `newsletter`) VALUES
+('david', 'German Dosko', 'a83507a48bf2f2ae2a40f73d43620ef2', 'info@agrouruguay2010.com', 1), #David2010
+('mauricio', 'Mauricio Sosa Cabral', '099f6f3b3ddd223d280aec96545e477c', 'info@agrouruguay2010.com', 1), #Mauricio2010
+('sergio', 'Sergio Sosa Cabral', '481c9ca773899d42c673742b2638f164', 'info@agrouruguay2010.com', 1); #Sergio2010
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `estates`
+--
+ALTER TABLE `estates`
+  ADD CONSTRAINT `estates_ibfk_1` FOREIGN KEY (`photoId`) REFERENCES `photos` (`id`);
+
+--
+-- Constraints for table `machineries`
+--
+ALTER TABLE `machineries`
+  ADD CONSTRAINT `machineries_ibfk_1` FOREIGN KEY (`photoId`) REFERENCES `photos` (`id`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

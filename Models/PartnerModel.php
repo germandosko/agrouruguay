@@ -1,0 +1,385 @@
+<?php
+/**
+ * @author		German Dosko
+ * @version		March 22, 2013
+ * @filesource		/Models/PartnerModel.php
+ */
+
+class PartnerModel extends AbstractModel {
+
+	/**
+	 * Saves the Partner in the Data Base
+	 * 
+	 * @param		Partner		$partner
+	 * @static
+	 */
+	public static function Save(&$partner){
+		$id = $partner->getId();
+		$properties = array(
+				"photoId" => null,
+				"date" => Date::ParseDate($partner->getDate()),
+				"description" => self::$IsUsingUtf8 ? htmlentities(utf8_decode($partner->getDescription()), ENT_COMPAT, self::$Charset, false) : htmlentities($partner->getDescription(), ENT_COMPAT, self::$Charset, false),
+				"title" => self::$IsUsingUtf8 ? htmlentities(utf8_decode($partner->getTitle()), ENT_COMPAT, self::$Charset, false) : htmlentities($partner->getTitle(), ENT_COMPAT, self::$Charset, false),
+				"premium" => intval($partner->getPremium()),
+				"active" => intval($partner->getActive())
+			);
+		if(is_object($partner->getPhoto())){
+			$properties["photoId"] = $partner->getPhoto()->getId();
+		}
+		$emptyValues = '';
+		if(empty($properties["date"])){
+			$emptyValues .= ' date';
+		}
+		if(empty($properties["title"])){
+			$emptyValues .= ' title';
+		}
+		if(empty($emptyValues)){
+			$query = new Query();
+			if(!empty($id) && is_int($id)){
+				$query->createUpdate('partners', $properties, 'id = "'.$id.'"', true);
+				$isExecuted = $query->execute();
+				if(!$isExecuted){
+					throw new Exception('Unable to update Partner "'.$id.'" in database. (PartnerModel::save())');
+				}
+			} else {
+				$query->createInsert('partners', $properties, true);
+				$isExecuted = $query->execute();
+				if($isExecuted){
+					//get the last inserted id
+					$query->createSelect(array('MAX(id) as id'), 'partners');
+					$value = $query->execute();
+					$partner->setId($value['id']);
+				} else {
+					throw new Exception('Unable to insert Partner in database. (PartnerModel::save())');
+				}
+			}
+		} else {
+			throw new Exception('Unable to save Partner with empty required values:'.$emptyValues.'. (PartnerModel::save())');
+		}
+		return true;
+	}
+
+	/**
+	 * Finds a Partner by id
+	 * 
+	 * @param		int		$id
+	 * @return		Partner
+	 * @static
+	 */
+	public static function FindById($id){
+		$query = new Query();
+		$query->createSelect(array('*'), 'partners', array(), 'id = "'.$id.'"');
+		$partnerArray = $query->execute();
+		$partner = false;
+		if(!empty($partnerArray)){
+			$partner = self::CreateObjectFromArray($partnerArray);
+		}
+		return $partner;
+	}
+
+	/**
+	 * Finds stored Partners by specific values
+	 * 
+	 * @param		array|string		$params
+	 * @param		bool				$expectsOne
+	 * @return		array|Partner
+	 * @static
+	 */
+	public static function FindBy($params, $expectsOne=false){
+		$partnersArray = array();
+		if(is_array($params)){
+			$params = self::CheckParams($params);
+			//TODO: Use Query::Make() !!!
+			$whereArray = array();
+			foreach ($params['where'] as $key => $value){
+				if(!empty($value)){
+					$parsedValue = self::$IsUsingUtf8 ? htmlentities(utf8_decode($value), ENT_COMPAT, self::$Charset, false) : htmlentities($value, ENT_COMPAT, self::$Charset, false);
+					array_push($whereArray, $key.' = "'.$parsedValue.'"');
+				}
+			}
+			$where = implode(' AND ', $whereArray);
+			$orderBy = array();
+			if(!empty($params['orderBy'])){
+				$orderBy = implode(',', $params['orderBy']);
+			}
+			$limit = '';
+			if(!empty($params['from'])){
+				$limit = ''.$params['from'];
+				if(!empty($params['amount'])){
+					$limit .= ', '.$params['amount'];
+				} else {
+					$limit .= ', 10';
+				}
+			}
+			$query = new Query();
+			$query->createSelect(array('*'), 'partners', null, $where, $orderBy, $limit);
+			$arrayArraysPartner = $query->execute(true);
+			if(!empty($arrayArraysPartner)){
+				if($expectsOne){
+					return self::CreateObjectFromArray($arrayArraysPartner[0]);
+				}
+				foreach($arrayArraysPartner as $arrayPartner){
+					array_push($partnersArray, self::CreateObjectFromArray($arrayPartner));
+				}
+			} elseif($expectsOne){
+				return false;
+			}
+		} else {
+			throw new Exception('Invalid param, array expected in PartnerModel::FindBy()');
+		}
+		return $partnersArray;
+	}
+
+	/**
+	 * Finds stored Partners by multiple values of an specific field
+	 * 
+	 * @param		array|string		$params
+	 * @return		array|Partner
+	 * @static
+	 */
+	public static function FindByMultipleValues($params, $expectsOne=false){
+		$partnersArray = array();
+		if(is_array($params)){
+			$params = self::CheckParams($params);
+			//TODO: Use Query::Make() !!!
+			$whereArray = array();
+			foreach ($params['where'] as $key => $value){
+				if(!empty($value) && is_array($value)){
+					array_push($whereArray, $key.' IN ('.implode(', ', $value).')');
+				} else {
+					throw new Exception('Invalid param, array expected in PartnerModel::FindByMultipleValues()');
+				}
+			}
+			$where = implode(' OR ', $whereArray);
+			$orderBy = array();
+			if(!empty($params['orderBy'])){
+				$orderBy = implode(',', $params['orderBy']);
+			}
+			$limit = '';
+			if(!empty($params['from'])){
+				$limit = ''.$params['from'];
+				if(!empty($params['amount'])){
+					$limit .= ', '.$params['amount'];
+				} else {
+					$limit .= ', 10';
+				}
+			}
+			$query = new Query();
+			$query->createSelect(array('*'), 'partners', null, $where, $orderBy, $limit);
+			$arrayArraysPartner = $query->execute(true);
+			if(!empty($arrayArraysPartner)){
+				foreach($arrayArraysPartner as $arrayPartner){
+					array_push($partnersArray, self::CreateObjectFromArray($arrayPartner));
+				}
+			}
+		} else {
+			throw new Exception('Invalid param, array expected in PartnerModel::FindByMultipleValues()');
+		}
+		return $partnersArray;
+	}
+
+	/**
+	 * Finds stored Partners by related Photo properties
+	 * 
+	 * @param		array|string		$params
+	 * @param		bool				$expectsOne
+	 * @return		array|Partner
+	 * @static
+	 */
+	public static function FindByPhotoProperties($params, $expectsOne=false){
+		$partnersArray = array();
+		if(is_array($params)){
+			$params = self::CheckParams($params);
+			$selectFields = array(
+					'partners.id',
+					'partners.photoId',
+					'partners.date',
+					'partners.description',
+					'partners.title',
+					'partners.premium',
+					'partners.active'
+				);
+			$joinArray = array('photos'=>'photos.id = partners.photoId');
+			$whereArray = array();
+			foreach ($params['where'] as $key => $value){
+				if(!empty($value)){
+					$parsedValue = self::$IsUsingUtf8 ? htmlentities(utf8_decode($value), ENT_COMPAT, self::$Charset, false) : htmlentities($value, ENT_COMPAT, self::$Charset, false);
+					array_push($whereArray, 'photos.'.$key.' = "'.$parsedValue.'"');
+				}
+			}
+			$where = implode(' AND ', $whereArray);
+			$orderBy = array();
+			if(!empty($params['orderBy'])){
+				$orderBy = implode(',', $params['orderBy']);
+			}
+			$limit = '';
+			if(!empty($params['from'])){
+				$limit = ''.$params['from'];
+				if(!empty($params['amount'])){
+					$limit .= ', '.$params['amount'];
+				} else {
+					$limit .= ', 10';
+				}
+			}
+			$query = new Query();
+			$query->createSelect(array('*'), 'partners', $joinArray, $where, $orderBy, $limit);
+			$arrayArraysPartner = $query->execute(true);
+			if(!empty($arrayArraysPartner)){
+				if($expectsOne){
+					return self::CreateObjectFromArray($arrayArraysPartner[0]);
+				}
+				foreach($arrayArraysPartner as $arrayPartner){
+					array_push($partnersArray, self::CreateObjectFromArray($arrayPartner));
+				}
+			} elseif($expectsOne){
+				return false;
+			}
+		} else {
+			throw new Exception('Invalid param, array expected in PartnerModel::FindByPhotoProperties()');
+		}
+		return $partnersArray;
+	}
+
+	/**
+	 * Retrieves all Partners stored in the data base
+	 * 
+	 * @return		array|Partner
+	 * @static
+	 */
+	public static function FetchAll($params=array('orderBy', 'from', 'amount')){
+		$partnersArray = array();
+		$params = self::CheckParams($params, self::FetchAll);
+		$orderBy = array();
+		if(!empty($params['orderBy'])){
+			$orderBy = implode(',', $params['orderBy']);
+		}
+		$limit = '';
+		if(!empty($params['from'])){
+			$limit = ''.$params['from'];
+			if(!empty($params['amount'])){
+				$limit .= ', '.$params['amount'];
+			} else {
+				$limit .= ', 10';
+			}
+		}
+		$query = new Query();
+		$query->createSelect(array('*'), 'partners', null, null, $orderBy, $limit);
+		$arrayArraysPartner = $query->execute(true);
+		if(!empty($arrayArraysPartner)){
+			foreach($arrayArraysPartner as $arrayPartner){
+				array_push($partnersArray, self::CreateObjectFromArray($arrayPartner));
+			}
+		}
+		return $partnersArray;
+	}
+
+	/**
+	 * Retrieves all Partners that matches the search text
+	 * 
+	 * @param		array|string		$params
+	 * @param		bool				$expectsOne
+	 * @return		array|Partner
+	 * @static
+	 */
+	public static function Search($params, $expectsOne=false){
+		$partnersArray = array();
+		if(is_array($params)){
+			$params = self::CheckParams($params);
+			if(is_array($params['where']) && isset($params['where']['text']) && isset($params['where']['fields'])){
+				$text = trim($params['where']['text']);
+				$searchs = array();
+				foreach($params['where']['fields'] as $field){
+					array_push($searchs, trim($field).' LIKE "%'.$text.'%"');
+				}
+				$where = implode(' OR ', $searchs);
+				$orderBy = array();
+				if(!empty($params['orderBy'])){
+					$orderBy = implode(',', $params['orderBy']);
+				}
+				$limit = '';
+				if(!empty($params['from'])){
+					$limit = ''.$params['from'];
+					if(!empty($params['amount'])){
+						$limit .= ', '.$params['amount'];
+					} else {
+						$limit .= ', 10';
+					}
+				}
+				$query = new Query();
+				$query->createSelect(array('*'), 'partners', null, $where, $orderBy, $limit);
+				$arrayArraysPartner = $query->execute(true);
+				if(!empty($arrayArraysPartner)){
+					if($expectsOne){
+						return self::CreateObjectFromArray($arrayArraysPartner[0]);
+					}
+					foreach($arrayArraysPartner as $arrayPartner){
+						array_push($partnersArray, self::CreateObjectFromArray($arrayPartner));
+					}
+				} elseif($expectsOne){
+					return false;
+				}
+			} else {
+				throw new Exception('Unable to perform search with invalid params. PartnerModel::Search()');
+			}
+		} else {
+			throw new Exception('Unable to perform search with invalid params. PartnerModel::Search()');
+		}
+		return $partnersArray;
+	}
+
+	/**
+	 * Retrieves the number of Partners stored in the data base
+	 * 
+	 * @return		int
+	 * @static
+	 */
+	public static function GetCount(){
+		$query = new Query();
+		$query->push('SELECT count(*) as count FROM partners');
+		$result = $query->execute();
+		return $result['count'];
+	}
+
+	/**
+	 *  Deletes Partner by id
+	 * 
+	 * @param		int		$id
+	 * @static
+	 */
+	public static function Delete($id){
+		$query = new Query();
+		$query->createDelete('partners', $id);
+		return $query->execute();
+	}
+
+	/**
+	 *  Creates Partner object from the basic properties
+	 * 
+	 * @param		array|string		$properties
+	 * @return		Partner
+	 * @static
+	 */
+	public static function CreateObjectFromArray($properties){
+		$emptyValues = '';
+		if(empty($properties["id"])){
+			$emptyValues .= ' id';
+		}
+		if(empty($properties["date"])){
+			$emptyValues .= ' date';
+		}
+		if(empty($properties["title"])){
+			$emptyValues .= ' title';
+		}
+		if(empty($emptyValues)){
+			if(!empty($properties['photoId'])){
+				$properties['photo'] = PhotoModel::FindById($properties['photoId']);
+				if(empty($properties['photo'])){
+					throw new Exception('Unable to find the Photo for the Partner.(PartnerModel::CreateObjectFromArray())');
+				}
+			}
+			return new Partner($properties);
+		} else {
+			throw new Exception('Unable to create Partner with empty required values:'.$emptyValues.' for Partner "'.$properties['id'].'". (PartnerModel::CreateObjectFromArray())');
+		}
+	}
+}
